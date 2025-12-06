@@ -1,0 +1,8 @@
+flask==3.1.2
+flask-SQLAlchemy==3.1.1
+pymysql==1.1.2
+flask-login==0.6.3
+
+# Important Specifications: Underthesea only supported for Python 3.8 to 3.11, any other version may cause issues in installing the package.
+underthesea==8.3.0
+dateparser==1.2.2

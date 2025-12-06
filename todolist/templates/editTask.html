@@ -1,0 +1,72 @@
+<form method="POST" action="/edit/{{ edit_task.id }}" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+    <div class="fieldholder">
+            <label>Title*</label>
+        <input type="text" name="title" value="{{ edit_task.title }}" required/>
+    </div>
+
+<div class="fieldholder">
+        <label>Description</label>
+        <textarea name="description">{{ edit_task.description }}</textarea>
+</div>
+    
+<div class="fieldholder">
+        <label>Due time*:</label>
+        <input type="datetime-local" 
+       name="time_set" 
+       value="{{ edit_task.time_set.strftime('%Y-%m-%dT%H:%M') if edit_task.time_set else '' }}" />
+
+</div>
+    
+    <div class="fieldholder">
+        <label>Expire time:</label>
+        <input type="datetime-local" 
+       name="expire_time" 
+       value="{{ edit_task.expire_time.strftime('%Y-%m-%dT%H:%M') if edit_task.expire_time else '' }}" />
+        
+    </div>
+
+    <div class="fieldholder">
+        <label>Repeat:</label>
+        <select name="recurrent_type">
+            <option value=-1{% if edit_task.recurrent_type == -1 %} selected{% endif %}>None</option>
+            <option value=0{% if edit_task.recurrent_type == 0 %} selected{% endif %}>Daily</option>
+            <option value=1{% if edit_task.recurrent_type == 1 %} selected{% endif %}>Weekly</option>
+            <option value=2{% if edit_task.recurrent_type == 2 %} selected{% endif %}>Monthly</option>
+            <option value=3{% if edit_task.recurrent_type == 3 %} selected{% endif %}>Yearly</option>
+        </select>
+    </div>
+
+    <div class="fieldholder">
+        <label>Reminder before task (minutes):</label>
+        <input type="number" name="reminder" min="0" step="5" value="{{ edit_task.reminder }}"/>
+    </div>
+
+    <div class="fieldholder">
+        <label>Repeat Interval:</label>
+        <input type="number" name="repeat_interval" min="0" step="5" value="{{ edit_task.repeat_interval }}"/>
+    </div>
+
+    <div style="display: flex; gap: 16px; align-items: center; width: 100%; justify-content: flex-end;">
+        <button class="btn btn-success" type="submit">Save Task</button>
+        <!-- For whatever reason, the add button won't work if I removed this -->
+        <a class="btn btn-danger" style="display: none;">Cancel</a>
+    </div>
+</form>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementsByName("time_set")[0];
+    const now = new Date();
+
+    // Format to YYYY-MM-DDTHH:MM
+    const formatted =
+        now.getFullYear()
+        + "-" + String(now.getMonth() + 1).padStart(2, "0")
+        + "-" + String(now.getDate()).padStart(2, "0")
+        + "T" + String(now.getHours()).padStart(2, "0")
+        + ":" + String(now.getMinutes()).padStart(2, "0");
+
+    input.min = formatted;
+});
+</script>

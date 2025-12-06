@@ -1,0 +1,25 @@
+/* TASK LIST */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 20px;
+}
+.task {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.task.overdue {
+    border-color: red;
+    background-color: #ffe5e5;
+}
+h2 {
+    margin: 0;
+}
+.meta {
+    margin-top: 8px;
+    color: #555;
+}
+form.inline {
+    display: inline;
+}

@@ -1,0 +1,2 @@
+- Prepared for MAJOR-PROJECT(2025)
+- Tech used: Flask

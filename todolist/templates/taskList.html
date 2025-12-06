@@ -1,0 +1,245 @@
+<div class="task-container">
+    {% for task in tasks %}
+    <div class="task-card {% if task.is_overdue() and task.status == 0 %}overdue
+    {% elif task.status == 1 %}completed
+    {% endif %}" onclick="toggleTask(this)">
+        <div style="right: 8px; position: absolute; top: 8px;">
+                <img src="../static/pin-2.png" alt="Calendar Icon" style="margin-right:8px;">
+            </div>
+        <div class="task-top">
+            <!-- Checkbox -->
+            {% if task.is_overdue() or task.status == 1 %}
+                <input type="checkbox" class="task-checkbox" checked disabled/>
+            {% else %}
+                <form method="POST" action="/{{ task.id }}/complete" class="check-wrapper"
+                    onclick="event.stopPropagation()">
+                    <input type="checkbox"
+                        class="task-checkbox"
+                        onchange="this.form.submit()"
+                        {% if task.status == 1 %}checked{% endif %}>
+                </form>
+            {% endif %}
+            
+            <!-- Title + Time -->
+            <div class="task-header">
+                <h2>
+                    {% if task.is_overdue() or task.status == 1 %}
+                        <del>{{ task.title }}</del>
+                    {% else %}
+                        <strong>{{ task.title }}</strong>
+                    {% endif %}
+                </h2>
+
+                {% if task.time_set %}
+                    <div class="task-time">
+                        {{ task.time_set.strftime("%Y-%m-%d") }}  
+                        <span class="time-hour">{{ task.time_set.strftime("%H:%M") }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Description (visible) -->
+        {% if task.description %}
+        <p class="task-description lead">{{ task.description }}</p>
+        {% endif %}
+
+        <!-- Hidden details -->
+        <div class="task-details">
+
+            <div>
+                {% if task.status == 1 %}
+                    <a class="btn btn-success">Completed</a>
+                {% elif task.status == 0 and task.is_overdue() %}
+                    <strong class="btn btn-danger">Overdue</strong>
+                {% else %}
+                    <a class="btn btn-warning">Pending</a>
+                {% endif %}
+            </div>
+
+            <div><strong>Task repeat:</strong>
+                {% if task.recurrent_type == 0 %}
+                    Daily
+                {% elif task.recurrent_type == 1 %}
+                    Weekly
+                {% elif task.recurrent_type == 2 %}
+                    Monthly
+                {% elif task.recurrent_type == 3 %}
+                    Yearly
+                {% else %}
+                    None
+                {% endif %}
+            </div>
+            <div><strong>Reminder:</strong> {{ task.reminder }} minutes before task begin.</div>
+            <div><strong>Reminder repeat interval:</strong> {{ task.repeat_interval }}</div>
+
+            {% if task.destination %}
+            <div><strong>Destination:</strong> {{ task.destination }}</div>
+            {% endif %}
+
+            <div class="task-buttons">
+                {% if task.status == 0 and not task.is_overdue() %}
+                    <form method="GET" action="/edit/{{ task.id }}" class="inline" onclick="event.stopPropagation();">
+                        <button type="submit" class="btn btn-success" id="edit-btn">Edit</button>
+                    </form>
+                {% elif task.status == 0 and task.is_overdue() and not task.recurrent_type== -1 %}
+                    <form method="GET" action="/renew/{{ task.id }}" class="inline" onclick="event.stopPropagation();">
+                        <button type="submit" class="btn btn-success">Renew task</button>
+                    </form>
+                {% endif %}
+
+                <form method="POST" action="/task/{{ task.id }}/delete" class="inline">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+
+
+<script>
+function toggleTask(el) {
+    const box = el.querySelector('.task-details');
+    if (!box) return;
+
+    const open = box.style.display === 'block';
+    box.style.display = open ? 'none' : 'block';
+}
+</script>
+
+
+<style>
+
+.task-container {
+    width: 100%;
+    margin: 16px auto;
+    max-width: 888px;
+}
+
+
+/* Card style */
+.task-card {
+    background: #ffffff;
+    border: 1px solid #e1e1e1;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+
+.task-card:hover {
+    transform: scale(1.02);
+}
+
+/* Overdue tasks pop visually */
+.task-card.overdue {
+    border-color: #e57373;
+    background: #fff2f2;
+}
+
+.task-card.completed {
+    border-color: #4caf50;
+    background: #e8f5e9;
+}
+
+/* Top row layout */
+.task-top {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    align-items: start;
+}
+
+/* Checkbox */
+.check-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Title + Time */
+.task-header h2 {
+    font-size: 1.15rem;
+    margin: 0;
+    padding: 0;
+}
+
+.task-time {
+    margin-top: 3px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #3a3a3a;
+}
+
+.task-time .time-hour {
+    color: #0077cc;
+    font-size: 1rem;
+    margin-left: 6px;
+}
+
+/* Description */
+.task-description {
+    margin: 8px 0;
+    color: #444;
+}
+
+/* Hidden details */
+.task-details {
+    display: none;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    color: #555;
+}
+
+.task-details > div {
+    margin-bottom: 5px;
+}
+
+/* Buttons */
+.task-buttons {
+    margin-top: 8px;
+}
+
+.btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    font-size: 0.85rem;
+}
+
+.btn-success {
+    background: #4caf50;
+    color: white;
+}
+
+.btn-danger {
+    background: #f44336;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .task-header h2 {
+        font-size: 1.05rem;
+    }
+}
+@media (max-width: 480px) {
+    .task-time {
+        font-size: 0.9rem;
+    }
+}
+</style>

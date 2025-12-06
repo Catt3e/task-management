@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.day {
+    border: 1px solid #ccc;
+    min-height: 120px;
+    padding: 5px;
+    background-color: #f9f9f9;
+}
+
+.day h3 {
+    margin-top: 0;
+    font-size: 14px;
+}
+
+.task {
+    border: 1px solid #aaa;
+    padding: 5px;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.task.overdue {
+    border-color: red;
+    background-color: #ffe5e5;
+}
+
+form.inline {
+    display: inline;
+}

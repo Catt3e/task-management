@@ -1,0 +1,17 @@
+"""
+Example instance config for the Flask to-do app.
+
+Copy this file to `instance/config.py` (do NOT check that file into source control if it
+contains secrets) and fill in your MySQL connection details.
+
+For development, you can use local MySQL or change the app to use SQLite instead.
+"""
+
+# MySQL connection settings
+MYSQL_HOST = 'localhost'
+MYSQL_USER = 'your_mysql_user'
+MYSQL_PASSWORD = 'your_mysql_password'
+MYSQL_DB = 'your_database_name'
+
+# Example: SECRET_KEY can be overridden here too
+# SECRET_KEY = 'replace-this-with-a-random-value'

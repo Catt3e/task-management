@@ -1,0 +1,67 @@
+
+<form method="POST" action="/add" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+    <div class="fieldholder row">
+        <label class="col">Title*</label>
+        <input class="col-2" type="text" name="title" required/>
+    </div>
+
+<div class="fieldholder row">
+        <label class="col">Description</label>
+        <textarea class="col-2" name="description"></textarea>
+</div>
+    
+<div class="fieldholder row">
+        <label class="col">Due time*:</label>
+        <input class="col-2" type="datetime-local" name="time_set" min="0"/>
+</div>
+    
+    <div class="fieldholder row">
+        <label class="col">Expire time:</label>
+        <input class="col-2" type="datetime-local" name="expire_time"/>
+    </div>
+
+    <div class="fieldholder row">
+        <label class="col">Repeat:</label>
+        <select class="col-2" name="recurrent_type">
+            <option value=-1 selected>None</option>
+            <option value=0>Daily</option>
+            <option value=1>Weekly</option>
+            <option value=2>Monthly</option>
+            <option value=3>Yearly</option>
+        </select>
+    </div>
+
+    <div class="fieldholder row">
+        <label class="col">Reminder before task (minutes):</label>
+        <input class="col-2" type="number" name="reminder" min="0" step="5"/>
+    </div>
+
+    <div class="fieldholder row">
+        <label class="col">Repeat Interval:</label>
+        <input class="col-2" type="number" name="repeat_interval" min="0" step="5"/>
+    </div>
+
+    <div style="display: flex; gap: 16px; align-items: center; width: 100%; justify-content: flex-end;">
+        <button class="btn btn-success" type="submit">Save Task</button>
+        <!-- For whatever reason, the add button won't work if I removed this -->
+        <a class="btn btn-danger" style="display: none;">Cancel</a>
+    </div>
+</form>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementsByName("time_set")[0];
+    const now = new Date();
+
+    // Format to YYYY-MM-DDTHH:MM
+    const formatted =
+        now.getFullYear()
+        + "-" + String(now.getMonth() + 1).padStart(2, "0")
+        + "-" + String(now.getDate()).padStart(2, "0")
+        + "T" + String(now.getHours()).padStart(2, "0")
+        + ":" + String(now.getMinutes()).padStart(2, "0");
+
+    input.min = formatted;
+});
+</script>
